@@ -1,5 +1,5 @@
 <template>
-	<div class="portfolio-page custom-scrollbar" :class="isSmall">
+	<div class="portfolio-page custom-scrollbar" :class="isSmall ? 'is-small' : ''">
 		<div class="page-head">
 			<div class="inset">
 				<p>Web Developer</p>
@@ -7,49 +7,15 @@
 				<p><a href="mailto:contact@benwnuk.com">contact@benwnuk.com</a></p>
 			</div>
 		</div>
-		<section
+		<PortfolioEntry
 			v-for="entry in portfolioContent"
 			:key="entry.slug"
-			class="portfolio-entry"
-			:class="entry.slug + (fullVideo === entry.slug ? ' full-video' : '') + isTall"
-			:style="`color: ${entry.color ? entry.color : 'black'}; background: ${entry.background ? entry.background : 'white'}`"
-		>
-			<div class="main inset">
-				<div class="head">
-					<div class="inner">
-						<h2>{{ entry.title }}</h2>
-						<p class="tagline">
-							{{ entry.tagline }}
-						</p>
-						<p>
-							<a :href="entry.url">{{ entry.url.replace('https://', '').replace('http://', '') }}</a>
-						</p>
-
-						<nuxt-content class="content-wrapper" :document="entry" />
-					</div>
-				</div>
-
-				<div v-if="entry.image" class="image">
-					<img :src="'portfolio/' + entry.image">
-				</div>
-				<div v-if="entry.video" class="video" @click="toggleFullVideo($event, entry.slug)">
-					<LazyVideo
-						:attrs="{ muted: true, loop: true, autoplay: true, controls: false}"
-						:sources="['portfolio/' + entry.video]"
-						:poster="'portfolio/' + entry.poster"
-						:pause-on-exit="false"
-						load-offset="150%"
-					/>
-				</div>
-			</div>
-			<div v-if="entry.tech" class="tags">
-				<ul class="inset">
-					<li v-for="label in entry.tech.split(',')" :key="label">
-						{{ label.trim() }}
-					</li>
-				</ul>
-			</div>
-		</section>
+			:entry="entry"
+			:active="fullVideo == entry.slug"
+			:is-tall="isTall"
+			:is-small="isSmall"
+			@videoClick="toggleFullVideo($event, entry.slug)"
+		/>
 	</div>
 </template>
 <script>
@@ -77,8 +43,8 @@
 		mounted () {
 			this.timer.observe('resize', this.$el, () => {
 				const rect = this.$el.getBoundingClientRect()
-				this.isTall = rect.height > rect.width * 0.8 ? ' is-tall' : ''
-				this.isSmall = rect.height < 500 || rect.width < 900 ? ' is-small' : ''
+				this.isTall = rect.height > rect.width * 0.8
+				this.isSmall = rect.height < 500 || rect.width < 900
 			})
 		},
 		methods: {
