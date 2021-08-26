@@ -1,6 +1,6 @@
 ---
 title: Wedge And Lever
-tagline: Wordpress Child Theme
+tagline: Organic small-batch Wordpress theme
 url: https://www.wedgeandlever.com
 background: '#1F3248'
 color: white

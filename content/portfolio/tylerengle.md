@@ -1,6 +1,6 @@
 ---
 title: Tyler Engle Architects
-tagline: Wordpress Child Theme
+tagline: Artisanal Wordpress theme
 url: http://tylerengle.com/
 background: '#A39586'
 color: '#222'

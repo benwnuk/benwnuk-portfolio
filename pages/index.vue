@@ -1,21 +1,17 @@
 <template>
 	<div class="portfolio-page custom-scrollbar" :class="isSmall ? 'is-small' : ''">
-		<div class="page-head">
-			<div class="inset">
-				<p>Web Developer</p>
-				<h1><BenWnukSVG /></h1>
-				<p><a href="mailto:contact@benwnuk.com">contact@benwnuk.com</a></p>
-			</div>
-		</div>
+		<PageHead />
 		<PortfolioEntry
-			v-for="entry in portfolioContent"
+			v-for="(entry, index) in portfolioContent"
 			:key="entry.slug"
 			:entry="entry"
 			:active="fullVideo == entry.slug"
 			:is-tall="isTall"
 			:is-small="isSmall"
+			:next="index < portfolioContent.length - 1 ? portfolioContent[index + 1].slug : 'interests'"
 			@videoClick="toggleFullVideo($event, entry.slug)"
 		/>
+		<MeGrid />
 	</div>
 </template>
 <script>
@@ -65,6 +61,7 @@ body {
 .custom-scrollbar {
   width: 100vw;
   scrollbar-gutter: always;
+  scroll-behavior: smooth;
 
   &::-webkit-scrollbar {
     width: 15px;
@@ -136,45 +133,6 @@ p {
   margin: 0 auto;
   width: calc(100% - 6em);
   max-width: 1380px;
-}
-
-.page-head {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 1em;
-  background: #fff;
-  z-index: 10;
-  color: #222;
-  height: 3.66em;
-  padding: 0;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
-
-  .inset {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 100%;
-  }
-
-  h1,
-  p {
-    margin: 0;
-  }
-
-  h1 {
-    color: #444;
-  }
-
-  p {
-    color: #222;
-    font-weight: 600;
-  }
-
-  a {
-    color: currentColor;
-    text-decoration: none;
-  }
 }
 
 .portfolio-entry {
@@ -259,9 +217,9 @@ p {
         display: block;
         position: absolute;
         content: '';
-        top: calc(100% + 5px);
-        left: 0;
-        right: 0;
+        top: calc(100% + 0.1em);
+        left: 0.2em;
+        right: 0.2em;
         height: 1px;
         background: currentColor;
         opacity: 0;
@@ -313,11 +271,16 @@ p {
       max-width: 100%;
       border-radius: 0.33em;
       box-shadow: 0 0.5em 2em rgba(0, 0, 0, 0.6);
-      transition: box-shadow 0.3s ease-in-out;
+      transition: box-shadow 0.3s ease-in-out, opacity 0.2s ease-in-out;
       cursor: pointer;
+      opacity: 0;
 
       &:hover {
         box-shadow: 0 0.5em 3em rgba(0, 0, 0, 0.8);
+      }
+
+      &.ready {
+        opacity: 1;
       }
     }
 
@@ -347,12 +310,20 @@ p {
     .inset {
       display: flex;
       align-items: center;
-      justify-content: center;
-      flex-wrap: wrap;
+      justify-content: space-between;
       flex-shrink: 0;
+      height: 100%;
+    }
+
+    ul {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
       list-style: none;
-      padding: 0.33em 0;
-      height: calc(100% - 0.66em);
+      flex-grow: 1;
+      margin: 0;
+      padding: 0;
     }
 
     li {
@@ -364,6 +335,28 @@ p {
       text-align: center;
       font-weight: 400;
       letter-spacing: 0.05em;
+      white-space: nowrap;
+    }
+
+    .next {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2em;
+      height: 2em;
+      margin: 0 0 0 1em;
+      padding: 0;
+      border: 1px solid currentColor;
+      flex-grow: 0;
+      flex-shrink: 0;
+      color: currentColor;
+      border-radius: 50%;
+
+      svg {
+        display: block;
+        width: 1.5em;
+        height: 1.5em;
+      }
     }
   }
 
@@ -469,11 +462,16 @@ p {
   }
 
   .inset {
-    width: calc(100% - 2em);
+    width: calc(100% - 3em);
   }
 
   .page-head .inset p:first-child {
     display: none;
+  }
+
+  .page-head .inset .benw-tag {
+    width: 16rem;
+    max-width: 36vw;
   }
 }
 

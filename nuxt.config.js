@@ -21,6 +21,9 @@ export default {
       OpenSans: true
     }
   },
+  googleAnalytics: {
+    id: 'UA-44676867-1'
+  },
   css: [
     'normalize.css/normalize.css'
   ],
@@ -34,7 +37,8 @@ export default {
   buildModules: [
     '@nuxtjs/eslint-module',
     '@nuxtjs/stylelint-module',
-    '@nuxtjs/google-fonts'
+    '@nuxtjs/google-fonts',
+    '@nuxtjs/google-analytics'
   ],
   modules: [
     '@nuxt/content'

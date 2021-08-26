@@ -1,5 +1,6 @@
 <template>
 	<section
+		:id="entry.slug"
 		class="portfolio-entry"
 		:class="entry.slug + (active ? ' full-video' : '') + (isTall ? ' is-tall' : '')"
 		:style="`color: ${entry.color ? entry.color : 'black'}; background: ${entry.background ? entry.background : 'white'}`"
@@ -12,7 +13,7 @@
 						{{ entry.tagline }}
 					</p>
 					<p>
-						<a :href="entry.url">{{ entry.url.replace('https://', '').replace('http://', '') }}</a>
+						<a :href="entry.url" target="_blank">{{ entry.url.replace('https://', '').replace('http://', '') }}</a>
 					</p>
 
 					<nuxt-content class="content-wrapper" :document="entry" />
@@ -24,21 +25,26 @@
 			</div>
 			<div v-if="entry.video" class="video" @click="$emit('videoClick', $event)">
 				<LazyVideo
+					ref="videoPlayer"
 					:attrs="{ muted: true, loop: true, autoplay: true, controls: false}"
 					:sources="videoSource"
 					:poster="'posters/' + entry.poster"
 					:pause-on-exit="false"
 					load-offset="150%"
+					:class="isReady ? 'ready' : ''"
 				/>
 			</div>
 		</div>
-		<div v-if="entry.tech" class="tags">
-			<ul class="inset">
-				<li v-for="label in entry.tech.split(',')" :key="label">
-					{{ label.trim() }}
-				</li>
-			</ul>
-		</div>
+		<footer class="tags">
+			<div class="inset">
+				<ul>
+					<li v-for="label in entry.tech.split(',')" :key="label">
+						{{ label.trim() }}
+					</li>
+				</ul>
+				<a v-if="next" :href="`#${next}`" class="next"><ArrowDownSVG /></a>
+			</div>
+		</footer>
 	</section>
 </template>
 <script>
@@ -61,6 +67,17 @@
 			isSmall: {
 				type: Boolean,
 				default: false
+			},
+			next: {
+				type: String,
+				default () {
+					return ''
+				}
+			}
+		},
+		data () {
+			return {
+				isReady: false
 			}
 		},
 		computed: {
@@ -70,6 +87,15 @@
 				} else {
 					return ['videos/' + this.entry.video]
 				}
+			}
+		},
+		mounted () {
+			if (this.$refs.videoPlayer) {
+				this.$refs.videoPlayer.$el.addEventListener('play', () => {
+					this.isReady = true
+				})
+			} else {
+				this.isReady = true
 			}
 		}
 	}
