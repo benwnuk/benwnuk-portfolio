@@ -6,10 +6,13 @@
 			</p>
 			<h1><BenWnukSVG /></h1>
 			<p class="links">
-				<a href="https://www.linkedin.com/in/benwnuk/" class="svg-link" target="_blank">
+				<a href="https://www.linkedin.com/in/benwnuk/" class="svg-link" target="_blank" title="Ben Wnuk on LinkedIn">
 					<LinkedinSVG />
 				</a>
-				<a href="mailto:contact@benwnuk.com" class="svg-link">
+				<a href="https://github.com/benwnuk/" class="svg-link" target="_blank" title="Ben Wnuk on Github">
+					<GithubSVG />
+				</a>
+				<a href="mailto:contact@benwnuk.com" class="svg-link" title="Email Ben Wnuk">
 					<EmailSVG />
 				</a>
 			</p>
@@ -22,7 +25,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  right: 1em;
+  right: 0;
   background: #fff;
   z-index: 10;
   color: #222;

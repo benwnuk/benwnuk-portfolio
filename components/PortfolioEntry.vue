@@ -20,18 +20,25 @@
 				</div>
 			</div>
 
-			<div v-if="entry.image" class="image">
+			<div v-if="entry.image && loadVideo" class="image">
 				<img :src="'portfolio/' + entry.image">
 			</div>
-			<div v-if="entry.video" class="video" @click="$emit('videoClick', $event)">
-				<LazyVideo
+			<div v-if="entry.video && loadVideo" class="video" @click="$emit('videoClick', $event)">
+				<!-- <LazyVideo
 					ref="videoPlayer"
 					:attrs="{ muted: true, loop: true, autoplay: true, controls: false}"
 					:sources="videoSource"
 					:poster="'posters/' + entry.poster"
 					:pause-on-exit="false"
-					load-offset="150%"
+					load-offset="100%"
 					:class="isReady ? 'ready' : ''"
+				/> -->
+				<Video
+					ref="videoPlayer"
+					class="ready"
+					:poster="'posters/' + entry.poster"
+					:low-src="'mobile-videos/' + entry.video"
+					:high-src="'videos/' + entry.video"
 				/>
 			</div>
 		</div>
@@ -42,13 +49,17 @@
 						{{ label.trim() }}
 					</li>
 				</ul>
-				<a v-if="next" :href="`#${next}`" class="next"><ArrowDownSVG /></a>
+				<button class="next" @click="$emit('scrollNext')">
+					<ArrowDownSVG />
+				</button>
 			</div>
 		</footer>
 	</section>
 </template>
 <script>
+	import timers from '~/mixins/timers'
 	export default {
+		mixins: [timers],
 		props: {
 			entry: {
 				type: Object,
@@ -67,17 +78,12 @@
 			isSmall: {
 				type: Boolean,
 				default: false
-			},
-			next: {
-				type: String,
-				default () {
-					return ''
-				}
 			}
 		},
 		data () {
 			return {
-				isReady: false
+				isReady: false,
+				loadVideo: false
 			}
 		},
 		computed: {
@@ -90,13 +96,18 @@
 			}
 		},
 		mounted () {
-			if (this.$refs.videoPlayer) {
-				this.$refs.videoPlayer.$el.addEventListener('play', () => {
+			this.timer.once('delayVideo', 100, () => {
+				this.loadVideo = true
+			})
+			this.timer.once('delayReady', 200, () => {
+				if (this.$refs.videoPlayer) {
+					this.$refs.videoPlayer.$el.addEventListener('playing', () => {
+						this.isReady = true
+					})
+				} else {
 					this.isReady = true
-				})
-			} else {
-				this.isReady = true
-			}
+				}
+			})
 		}
 	}
 </script>

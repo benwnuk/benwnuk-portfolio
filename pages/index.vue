@@ -1,6 +1,11 @@
 <template>
 	<div class="portfolio-page custom-scrollbar" :class="isSmall ? 'is-small' : ''">
 		<PageHead />
+		<Intro
+			:is-tall="isTall"
+			:is-small="isSmall"
+			@scrollNext="scrollTo('widefpv')"
+		/>
 		<PortfolioEntry
 			v-for="(entry, index) in portfolioContent"
 			:key="entry.slug"
@@ -8,7 +13,7 @@
 			:active="fullVideo == entry.slug"
 			:is-tall="isTall"
 			:is-small="isSmall"
-			:next="index < portfolioContent.length - 1 ? portfolioContent[index + 1].slug : 'interests'"
+			@scrollNext="scrollTo(index < portfolioContent.length - 1 ? portfolioContent[index + 1].slug : 'passion')"
 			@videoClick="toggleFullVideo($event, entry.slug)"
 		/>
 		<MeGrid />
@@ -39,8 +44,16 @@
 		mounted () {
 			this.timer.observe('resize', this.$el, () => {
 				const rect = this.$el.getBoundingClientRect()
-				this.isTall = rect.height > rect.width * 0.8
+				this.isTall = rect.height > rect.width * 0.9
 				this.isSmall = rect.height < 500 || rect.width < 900
+			})
+			const hash = window.location.href.split('#')[1]
+			if (hash) {
+				document.getElementById(hash).scrollIntoView()
+			}
+			this.timer.once('consoleHello', 1000, () => {
+				console.log('scoping my code? lets work together!')
+				console.log('https://github.com/benwnuk/benwnuk-portfolio')
 			})
 		},
 		methods: {
@@ -48,6 +61,9 @@
 				if (event.target.nodeName === 'VIDEO') {
 					this.fullVideo = this.fullVideo === slug ? false : slug
 				}
+			},
+			scrollTo (id) {
+				document.getElementById(id).scrollIntoView()
 			}
 		}
 	}
@@ -64,17 +80,7 @@ body {
   scroll-behavior: smooth;
 
   &::-webkit-scrollbar {
-    width: 15px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: #fff;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #555;
-    border-radius: 7px;
-    border: 2px solid #fff;
+    width: 0;
   }
 }
 
@@ -95,38 +101,36 @@ p {
   line-height: 1.5em;
 }
 
+.next {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2em;
+  height: 2em;
+  margin: 0 0 0 1em;
+  padding: 0;
+  border: 1px solid currentColor;
+  background: transparent;
+  outline: none;
+  flex-grow: 0;
+  flex-shrink: 0;
+  color: currentColor;
+  border-radius: 50%;
+  cursor: pointer;
+
+  svg {
+    display: block;
+    width: 1.5em;
+    height: 1.5em;
+  }
+}
+
 .portfolio-page {
   margin-top: 3.66em;
   height: calc(100% - 3.66em);
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
   font-size: 16px;
-
-  &::before {
-    display: block;
-    position: fixed;
-    content: '';
-    top: 0;
-    right: 0;
-    width: 1em;
-    height: 3.66em;
-    background: #fff;
-    z-index: 20;
-  }
-
-  &::after {
-    display: none;
-    position: fixed;
-    content: '';
-    top: 3.66em;
-    right: 0;
-    bottom: 0;
-    width: 1em;
-    background: transparent;
-    z-index: 0;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
-    pointer-events: none;
-  }
 }
 
 .inset {
@@ -271,15 +275,16 @@ p {
       max-width: 100%;
       border-radius: 0.33em;
       box-shadow: 0 0.5em 2em rgba(0, 0, 0, 0.6);
-      transition: box-shadow 0.3s ease-in-out, opacity 0.2s ease-in-out;
+      transition: box-shadow 0.3s ease-in-out, opacity 0.3s ease-in-out 0.15s;
       cursor: pointer;
       opacity: 0;
+      will-change: opacity;
 
       &:hover {
         box-shadow: 0 0.5em 3em rgba(0, 0, 0, 0.8);
       }
 
-      &.ready {
+      &.show {
         opacity: 1;
       }
     }
@@ -336,27 +341,6 @@ p {
       font-weight: 400;
       letter-spacing: 0.05em;
       white-space: nowrap;
-    }
-
-    .next {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 2em;
-      height: 2em;
-      margin: 0 0 0 1em;
-      padding: 0;
-      border: 1px solid currentColor;
-      flex-grow: 0;
-      flex-shrink: 0;
-      color: currentColor;
-      border-radius: 50%;
-
-      svg {
-        display: block;
-        width: 1.5em;
-        height: 1.5em;
-      }
     }
   }
 
