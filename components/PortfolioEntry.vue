@@ -24,15 +24,6 @@
 				<img :src="'portfolio/' + entry.image">
 			</div>
 			<div v-if="entry.video && loadVideo" class="video" @click="$emit('videoClick', $event)">
-				<!-- <LazyVideo
-					ref="videoPlayer"
-					:attrs="{ muted: true, loop: true, autoplay: true, controls: false}"
-					:sources="videoSource"
-					:poster="'posters/' + entry.poster"
-					:pause-on-exit="false"
-					load-offset="100%"
-					:class="isReady ? 'ready' : ''"
-				/> -->
 				<Video
 					ref="videoPlayer"
 					class="ready"

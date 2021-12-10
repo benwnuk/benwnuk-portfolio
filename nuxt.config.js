@@ -25,10 +25,10 @@ export default {
     id: 'UA-44676867-1'
   },
   css: [
-    'normalize.css/normalize.css'
+    // 'normalize.css/normalize.css'
   ],
   plugins: [
-    '~/plugins/lazy-video.js'
+    '~/plugins/mdi-icons.js'
   ],
   eslint: {
     cache: false
@@ -37,7 +37,6 @@ export default {
   buildModules: [
     '@nuxtjs/eslint-module',
     '@nuxtjs/stylelint-module',
-    '@nuxtjs/google-fonts',
     '@nuxtjs/google-analytics'
   ],
   modules: [
@@ -49,5 +48,6 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+    transpile: ['mdi-vue']
   }
 }

@@ -7,13 +7,6 @@
 				:style="position(item)"
 			>
 				<div class="inner">
-					<!-- <LazyVideo
-						v-if="item.src.split('.')[1] == 'mp4'"
-						:attrs="{ muted: true, loop: true, autoplay: true, controls: false}"
-						:src="'grid/' + item.src"
-						:pause-on-exit="false"
-						load-offset="200%"
-					/> -->
 					<Video
 						v-if="item.src.split('.')[1] == 'mp4'"
 						ref="videoPlayer"
