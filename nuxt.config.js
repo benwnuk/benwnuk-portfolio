@@ -49,5 +49,9 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     transpile: ['mdi-vue']
+  },
+  server: {
+    host: '0.0.0.0',
+    port: process.env.PORT || 3000
   }
 }

@@ -6,14 +6,14 @@
 			</p>
 			<h1><BenWnukSVG /></h1>
 			<p class="links">
+				<a href="/resume" class="svg-link" title="Ben Wnuk Resume">
+					<mdicon name="file-account" />
+				</a>
 				<a href="https://www.linkedin.com/in/benwnuk/" class="svg-link" target="_blank" title="Ben Wnuk on LinkedIn">
-					<LinkedinSVG />
+					<mdicon name="linkedin" />
 				</a>
 				<a href="https://github.com/benwnuk/" class="svg-link" target="_blank" title="Ben Wnuk on Github">
-					<GithubSVG />
-				</a>
-				<a href="mailto:contact@benwnuk.com" class="svg-link" title="Email Ben Wnuk">
-					<EmailSVG />
+					<mdicon name="github" />
 				</a>
 			</p>
 		</div>
@@ -71,6 +71,13 @@
     flex-shrink: 0;
     width: 18%;
     min-width: 140px;
+  }
+
+  .benw-tag {
+    svg {
+      width: auto;
+      height: 0.85em;
+    }
   }
 }
 

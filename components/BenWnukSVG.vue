@@ -16,8 +16,6 @@
 <style lang="scss">
   .benw-tag {
     display: block;
-    width: 12rem;
-    max-width: 30vw;
     text-decoration: none !important;
 
     h1 {
@@ -29,7 +27,6 @@
       fill: #444;
       stroke: none;
       height: auto;
-      width: 100%;
     }
   }
 
