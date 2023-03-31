@@ -1,7 +1,13 @@
 <template>
-	<OverlayScale class="resume-page" :x-scale="87" :y-scale="112" :max="100">
+	<OverlayScale
+		class="resume-page"
+		:class="fixedScale ? 'fixed' : ''"
+		:x-scale="87"
+		:y-scale="112"
+		:max="100"
+	>
 		<div class="paper">
-			<section class="side-column">
+			<header class="resume-header">
 				<div class="logo">
 					<BenWnukQR class="qr-code" />
 
@@ -10,7 +16,6 @@
 						<h3>Web Developer</h3>
 					</div>
 				</div>
-
 				<div class="details">
 					<p><mdicon name="map-marker" />Porland Oregon, Earth</p>
 					<p><a href="http://benwnuk.com" target="_blank"><mdicon name="page-next-outline" />benwnuk.com</a></p>
@@ -19,18 +24,8 @@
 					<p><a href="https://linkedin.com/in/benwnuk" target="_blank"><mdicon name="linkedin" />linkedin.com/in/benwnuk</a></p>
 					<p><a href="https://github.com/benwnuk" target="_blank"><mdicon name="github" />github.com/benwnuk</a></p>
 				</div>
-				<hr>
-				<p v-for="(tech, key) in techs" :key="key">
-					<strong>{{ key }}</strong><br> {{ tech }}
-				</p>
-				<div class="side-footer">
-					<hr>
-					<p v-for="(tech, key) in also" :key="key">
-						<strong>{{ key }}</strong><br> {{ tech }}
-					</p>
-				</div>
-			</section>
-			<section class="main-column">
+			</header>
+			<section class="resume-main">
 				<h4 style="margin: 0.5em 0 0.66em;">
 					Creative codemonkey seeking opportunities to make cool stuff with good people.
 				</h4>
@@ -58,7 +53,28 @@
 						<footer>{{ entry.quote.author }}</footer>
 					</blockquote>
 				</section>
+				<div class="controls">
+					<button @click="print">
+						<mdicon name="printer" />
+					</button>
+					<button @click="fixedScale = !fixedScale">
+						<mdicon v-if="fixedScale" name="magnify-minus-outline" />
+						<mdicon v-else name="magnify-plus-outline" />
+					</button>
+				</div>
 			</section>
+			<section class="resume-tech">
+				<hr>
+				<p v-for="(tech, key) in techs" :key="key">
+					<strong>{{ key }}</strong><br> {{ tech }}
+				</p>
+			</section>
+			<footer class="resume-footer">
+				<hr>
+				<p v-for="(tech, key) in also" :key="key">
+					<strong>{{ key }}</strong><br> {{ tech }}
+				</p>
+			</footer>
 		</div>
 	</OverlayScale>
 </template>
@@ -79,10 +95,11 @@
 		},
 		data () {
 			return {
+				fixedScale: false,
 				techs: {
 					Javascript: 'ES6, Workers, Webpack, Web Sockets, Message Channels, Streams, Typed Arrays, Shared Arrays',
+					Frameworks: 'Vue.js, Nuxt.js (static and SSR, routed and SPA), Vuetify, Three.js, jQuery, Jekyll',
 					Templating: 'Symantic HTML markup, Responsive CSS/SCSS, UI/UX animations',
-					Frameworks: 'Vue, Nuxt (static and SSR, routed and SPA), Vuetify, Three.js, jQuery, Jekyll',
 					'Media APIs': 'Audio Nodes, User/Device MediaStreams, Canvas 2d/3d/Offscreen, Web Codec, MediaRecorder, WASM muxing',
 					'Progressive Web Apps': 'Manifests, Service Workers, Workbox',
 					WebRTC: 'Peer Connections, Data Channels, Peer.js',
@@ -103,6 +120,9 @@
 			})
 		},
 		methods: {
+			print () {
+				window.print()
+			}
 		}
 	}
 </script>
@@ -124,10 +144,6 @@ body,
   overflow: hidden;
 }
 
-* {
-  box-sizing: border-box;
-}
-
 .resume-page {
   position: fixed;
   top: 0;
@@ -138,14 +154,45 @@ body,
   justify-content: center;
   align-items: center;
 
-  @media print {
-    font-size: 7.1pt !important;
+  * {
+    box-sizing: border-box;
+  }
+
+  .controls {
+    position: absolute;
+    z-index: 500;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    border-top: thin solid #ccc;
+    border-left: thin solid #ccc;
+    border-top-left-radius: 1em;
+
+    button {
+      appearance: none;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      padding: 0.5em 0.75em;
+      display: block;
+      font-size: 1.66em;
+
+      &:first-child {
+        border-right: thin solid #ccc;
+      }
+
+      svg {
+        width: 1.5em;
+        height: 1.5em;
+        opacity: 0.8;
+      }
+    }
   }
 
   .logo {
     display: flex;
     align-items: center;
-    margin: 1.5em 0 2em;
+    margin: 0 0 1.9em;
 
     svg {
       width: 6.5em;
@@ -174,14 +221,6 @@ body,
     height: 1.5em;
     margin-right: 1em;
     opacity: 0.9;
-  }
-
-  .details {
-    margin-top: 1.66em;
-
-    p {
-      // margin: 0 !important;
-    }
   }
 
   h2,
@@ -223,12 +262,6 @@ body,
     font-size: 2.5em;
     font-weight: 300;
     line-height: 1.45em;
-  }
-
-  h5 {
-    font-size: 2em;
-    font-weight: 500;
-    opacity: 0.9;
   }
 
   p,
@@ -288,27 +321,51 @@ body,
     width: 85em;
     height: 110em;
     border: thin solid black;
-    display: flex;
-    border-radius: 0.5em;
-  }
-
-  .side-column {
-    width: 33.33%;
-    border-right: thin solid #ccc;
-    padding: 1em 2em;
     position: relative;
+    display: grid;
+    grid-template-columns: [sidebar] 27em [main] auto;
+    grid-template-rows: [header] 28em [tech] auto [footer] 18em;
+    grid-auto-rows: min-content;
+    border-radius: 0.5em;
+
+    &::before {
+      display: block;
+      content: '';
+      position: absolute;
+      top: 2em;
+      bottom: 2em;
+      left: 27.5em;
+      width: 1px;
+      background: #ccc;
+    }
   }
 
-  .side-footer {
-    position: absolute;
-    bottom: 2em;
-    left: 2em;
-    right: 2em;
+  .resume-header,
+  .resume-tech,
+  .resume-footer {
+    grid-column: sidebar;
   }
 
-  .main-column {
-    width: 66.66%;
-    padding: 1em 2em;
+  .resume-header {
+    grid-row: header;
+    padding: 3em 2em;
+  }
+
+  .resume-tech {
+    grid-row: tech;
+    padding: 0 2em;
+  }
+
+  .resume-footer {
+    grid-row: footer;
+    padding: 2em;
+  }
+
+  .resume-main {
+    grid-row-start: 1;
+    grid-row-end: 4;
+    grid-column: main;
+    padding: 1.2em 3em 2em;
 
     section {
       header {
@@ -322,6 +379,82 @@ body,
           font-style: normal;
           font-weight: 400;
           opacity: 0.6;
+        }
+      }
+    }
+  }
+
+  @media print {
+    font-size: 7.1pt !important;
+
+    .controls {
+      display: none;
+    }
+  }
+
+  &.fixed {
+    @media screen {
+      font-size: 11px !important;
+      display: block;
+      padding: 0;
+      overflow-y: auto;
+      height: auto;
+      -ms-overflow-style: none; /* for Internet Explorer, Edge */
+      scrollbar-width: none; /* for Firefox */
+
+      &::-webkit-scrollbar {
+        display: none; /* for Chrome, Safari, and Opera */
+      }
+
+      .paper {
+        width: 100%;
+        max-width: 1000px;
+        margin: 0 auto;
+        height: auto;
+        min-height: 100%;
+        border: none;
+        padding-bottom: 5em;
+      }
+
+      .controls {
+        position: fixed;
+        bottom: 2em;
+        right: 2em;
+        border: thin solid #ccc;
+        border-radius: 0.5em;
+        background: #fff;
+      }
+
+      .logo {
+        svg {
+          width: 5.5em;
+        }
+      }
+
+      @media (max-width: 720px) {
+        position: relative;
+        height: 100%;
+
+        .paper {
+          display: block;
+          width: 560px;
+          max-width: 100%;
+
+          &::before {
+            display: none;
+          }
+
+          .resume-header {
+            padding-bottom: 0;
+          }
+
+          .resume-footer {
+            padding-top: 0;
+          }
+
+          .resume-main {
+            padding: 1em 2em 2em;
+          }
         }
       }
     }
